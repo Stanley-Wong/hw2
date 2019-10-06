@@ -28,9 +28,10 @@ export class ListScreen extends Component {
                     <div id="list_details_name_container" className="text_toolbar">
                         <span id="list_name_prompt">Name:</span>
                         <input 
-                            value={this.getListName()} 
+                            defaultValue={this.getListName()} 
                             type="text" 
-                            id="list_name_textfield" />
+                            id="list_name_textfield" 
+                            onChange={evt => this.props.changeListName.bind(this, evt)}/>
                     </div>
                     <div id="list_details_owner_container" className="text_toolbar">
                         <span id="list_owner_prompt">Owner:</span>
@@ -40,7 +41,15 @@ export class ListScreen extends Component {
                             id="list_owner_textfield" />
                     </div>
                 </div>
-                <ListItemsTable todoList={this.props.todoList} />
+                <ListItemsTable 
+                todoList={this.props.todoList} 
+                moveUp={this.props.moveUp}
+                moveDown={this.props.moveDown}
+                delete={this.props.delete}
+                sortDescription={this.props.sortDescription}
+                sortDueDate={this.props.sortDueDate}
+                sortStatus={this.props.sortStatus}
+                />
             </div>
         )
     }

@@ -142,3 +142,25 @@ body {
 .item_input {
   grid-column: 2 / 4;
 }
+
+/*button*/
+.list_item_button_up,.list_item_button_down,.list_item_button_delete {
+    background-color: #669966;
+    position: absolute;
+    font-size: 35px;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.list_item_button_up {
+    left: 81.5%;
+}
+.list_item_button_down {
+    left: 87.25%;
+}
+.list_item_button_delete {
+    left: 93%;
+}
