@@ -1,19 +1,6 @@
 import React, { Component } from 'react'
 
 
-const popUp = {
-    display: 'grid',
-    position: 'fixed',
-    width: '50%',
-    height: '300px',
-    top: '0px',
-    left: '0',
-    right: '0',
-    bottom: '0',
-    margin: 'auto',
-    backgroundColor: 'rgb(225,228,203)',
-    textAlign: 'left'
-}
 const inline = {
     display: 'inline-block'
 }
@@ -28,7 +15,7 @@ const button = {
 export class ListDeletePopUp extends Component {
     render() {
         return (
-            <div className='deleteList' style={popUp}>
+            <div className="deletePopUp">
                 <p>Delete List?</p>
                 <p style={bold}>Are you sure you want to delete this list?</p>
                 <div style={inline}>
