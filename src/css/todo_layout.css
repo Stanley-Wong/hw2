@@ -164,3 +164,10 @@ body {
 .list_item_button_delete {
     left: 93%;
 }
+.newItem {
+  font-weight: bold;
+  font-size: 24pt;
+  text-align: center;
+  background-color: var(--swatch-neutral);
+}
+

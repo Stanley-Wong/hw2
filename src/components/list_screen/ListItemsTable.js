@@ -15,7 +15,6 @@ const header = {
 export class ListItemsTable extends Component {
     lastIndex = () => {
         var length = this.props.todoList.items.length
-        console.log(this.props.todoList.items.length);
         return length-1;
     }
     render() {
@@ -23,7 +22,7 @@ export class ListItemsTable extends Component {
             <div>
                 <div style={header} id="list_items_container">
                     <div onClick={this.props.sortDescription} className="list_item_task_header">Task</div>
-                    <div onClick={this.props.sortDueDate}className="list_item_due_date_header">Due Date</div>
+                    <div onClick={this.props.sortDueDate} className="list_item_due_date_header">Due Date</div>
                     <div onClick={this.props.sortStatus} className="list_item_status_header">Status</div>
                 </div>
                 <div>
@@ -38,10 +37,12 @@ export class ListItemsTable extends Component {
                             moveUp={this.props.moveUp}
                             moveDown={this.props.moveDown}
                             delete={this.props.delete}
+                            editItem={this.props.editItem}
                             />
                     ))
                 }
                 </div>
+                <div onClick={this.props.newItem} className="newItem">+</div>
             </div>
         )
     }

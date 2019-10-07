@@ -56,7 +56,7 @@ export class ListItemCard extends Component {
     render() {
         const {description, assigned_to, due_date, key} = this.props.listItem;
         return (
-            <div className='list_item_card'>
+            <div className='list_item_card' onClick={this.props.editItem.bind(this, this.props.listItem)}>
                 <div className='list_item_card_description'>
                     {description}
                 </div>
