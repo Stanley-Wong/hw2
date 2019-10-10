@@ -32,7 +32,6 @@ export class ListItemsTable extends Component {
                         <ListItemCard
                             last={this.lastIndex()}
                             index = {this.props.todoList.items.indexOf(todoItem)}
-                            key={todoItem.key}
                             listItem={todoItem} 
                             moveUp={this.props.moveUp}
                             moveDown={this.props.moveDown}

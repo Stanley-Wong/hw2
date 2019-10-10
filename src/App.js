@@ -91,6 +91,12 @@ class App extends Component {
     this.setState({currentList: todoListToLoad});
     console.log("currentList: " + this.state.currentList);
     console.log("currentScreen: " + this.state.currentScreen);
+    let tempTodoLists = this.state.todoLists;
+    let tempList = todoListToLoad;
+    let index = tempTodoLists.indexOf(todoListToLoad);
+    tempTodoLists.splice(index,1);
+    tempTodoLists.unshift(tempList);
+    this.setState({todoLists:tempTodoLists})
   }
 
   sortByDescription = () => {
@@ -124,8 +130,8 @@ class App extends Component {
 
 
   moveUp = (item) => {
-    var tempList = this.state.currentList;
-    var tempItem = tempList.items;
+    let tempList = this.state.currentList;
+    let tempItem = tempList.items;
     console.log(item);
     console.log(item.description);
     console.log(item.assigned_to);
@@ -140,10 +146,10 @@ class App extends Component {
   }
 
   moveDown = (item) => {
-    var tempList = this.state.currentList;
-    var tempItem = tempList.items;
-    var index = tempItem.indexOf(item);
-    var temp = tempItem[index+1];
+    let tempList = this.state.currentList;
+    let tempItem = tempList.items;
+    let index = tempItem.indexOf(item);
+    let temp = tempItem[index+1];
     tempItem[index+1]=tempItem[index];
     tempItem[index]=temp;
     tempList.items = tempItem;
@@ -151,9 +157,9 @@ class App extends Component {
   }
 
   delete = (item) => {
-    var tempList = this.state.currentList;
-    var tempItem = tempList.items;
-    var index = tempItem.indexOf(item);
+    let tempList = this.state.currentList;
+    let tempItem = tempList.items;
+    let index = tempItem.indexOf(item);
     tempItem.splice(index,1);
     this.setState({currentList:tempList});
   }
