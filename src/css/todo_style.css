@@ -191,6 +191,7 @@ font-size: 16pt;
   animation-name: slideInLeft;
   animation-duration: 0.5s;
 }
+
 @keyframes slideInLeft {
   from{Left: -1000px; opacity: 0;}
   to{left:0; opacity:1}
