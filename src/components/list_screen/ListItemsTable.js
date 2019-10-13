@@ -20,7 +20,7 @@ export class ListItemsTable extends Component {
     render() {
         return (
             <div>
-                <div style={header} id="list_items_container">
+                <div style={header}q id="list_items_container">
                     <div onClick={this.props.sortDescription} className="list_item_task_header">Task</div>
                     <div onClick={this.props.sortDueDate} className="list_item_due_date_header">Due Date</div>
                     <div onClick={this.props.sortStatus} className="list_item_status_header">Status</div>

@@ -3,6 +3,9 @@ import testTodoListData from './TestTodoListData.json'
 import HomeScreen from './components/home_screen/HomeScreen'
 import ItemScreen from './components/item_screen/ItemScreen'
 import ListScreen from './components/list_screen/ListScreen'
+import jsTPS from './jsTPS'
+import { transactionsDelete } from './Transactions/transactionDelete.js';
+import { transactionsMoveUp } from './Transactions/transactionMoveUp.js';
 
 const AppScreen = {
   HOME_SCREEN: "HOME_SCREEN",
@@ -11,6 +14,17 @@ const AppScreen = {
 }
 
 class App extends Component {
+
+  constructor(){
+    super();
+    this.tps = new jsTPS();
+    this.transactionList = null;
+  }
+
+  setTransactionList(initTransactionList) {
+    this.transactionList=initTransactionList;
+  }
+
   state = {
     currentScreen: AppScreen.HOME_SCREEN,
     todoLists: testTodoListData.todoLists,
@@ -130,19 +144,11 @@ class App extends Component {
 
 
   moveUp = (item) => {
-    let tempList = this.state.currentList;
-    let tempItem = tempList.items;
-    console.log(item);
-    console.log(item.description);
-    console.log(item.assigned_to);
-    console.log(item.due_date);
-    console.log(item.completed);
-    var index = tempItem.indexOf(item);
-    var temp = tempItem[index-1];
-    tempItem[index-1]=tempItem[index];
-    tempItem[index]=temp;
-    tempList.items = tempItem;
-    this.setState({currentList:tempList});
+    this.moveUpItem = this.state.currentList;
+    let transaction = new transactionsMoveUp(this.moveUpItem, item, this);
+    this.tps.addTransaction(transaction);
+
+    this.setState({currentList:this.transactionList});
   }
 
   moveDown = (item) => {
@@ -157,22 +163,15 @@ class App extends Component {
   }
 
   delete = (item) => {
-    let tempList = this.state.currentList;
-    let tempItem = tempList.items;
-    let index = tempItem.indexOf(item);
-    tempItem.splice(index,1);
-    this.setState({currentList:tempList});
+    this.deleteItemList = this.state.currentList;
+    let transaction = new transactionsDelete(this.deleteItemList, item, this);
+    this.tps.addTransaction(transaction);
+
+    this.setState({currentList:this.transactionList});
   }
   
   print = () => {
     console.log("It ran");
-  }
-
-  changeListName = (evt) => {
-    var tempList = this.state.currentList;
-    tempList.name = evt.target.value;
-    this.setState({currentList:tempList});
-    this.print();
   }
 
   createOrEditItem = (item) => {
@@ -182,39 +181,54 @@ class App extends Component {
       this.createNewItem(item);
   }
 
+  handleKeyDown = (evt) =>{
+    let char = String.fromCharCode(evt.which).toLowerCase();
+    if(evt.ctrlKey && char === 'z'){
+      console.log("Ctrl + Z pressed");
+      this.tps.undoTransaction();
+      this.setState({currentList:this.transactionList});
+    }
+    if(evt.ctrlKey && char === 'y'){
+      console.log("Ctrl + Y pressed");
+      this.tps.doTransaction();
+      this.setState({currentList:this.transactionList});
+    }
+    if(evt.ctrlKey && char === 'a'){
+      console.log(this.tps.peekUndo);
+    }
+  }
 
   render() {
-    switch(this.state.currentScreen) {
-      case AppScreen.HOME_SCREEN:
-        return <HomeScreen 
-        loadList={this.loadList.bind(this)} 
-        todoLists={this.state.todoLists} 
-        createNewList={this.createNewList}/>;
-      case AppScreen.LIST_SCREEN:            
-        return <ListScreen
-          changeListName={this.changeListName}
-          goHome={this.goHome.bind(this)}
-          todoList={this.state.currentList} 
-          moveUp={this.moveUp}
-          moveDown={this.moveDown}
-          delete={this.delete}
-          sortDescription={this.sortByDescription}
-          sortDueDate={this.sortByDueDate}
-          sortStatus={this.sortByStatus}
-          newItem={this.newItem}
-          editItem={this.editItem}
-          confirmDelete={this.deleteList}
-          />;
-      case AppScreen.ITEM_SCREEN:
-        return <ItemScreen 
-          goHome={this.goHome.bind(this)}
-          todoItem={this.state.currentItem}
-          todoList={this.state.currentList}
-          createOrEditItem={this.createOrEditItem}
-          cancel={this.cancel}
-        />;
-      default:
-        return <div>ERROR</div>;
+        window.addEventListener('keydown', this.handleKeyDown);
+        switch(this.state.currentScreen) {
+          case AppScreen.HOME_SCREEN:
+            return <HomeScreen 
+            loadList={this.loadList.bind(this)} 
+            todoLists={this.state.todoLists} 
+            createNewList={this.createNewList}/>;
+          case AppScreen.LIST_SCREEN:            
+            return <ListScreen
+              changeListName={this.changeListName}
+              goHome={this.goHome.bind(this)}
+              todoList={this.state.currentList} 
+              moveUp={this.moveUp}
+              moveDown={this.moveDown}
+              delete={this.delete}
+              sortDescription={this.sortByDescription}
+              sortDueDate={this.sortByDueDate}
+              sortStatus={this.sortByStatus}
+              newItem={this.newItem}
+              editItem={this.editItem}
+              confirmDelete={this.deleteList}/>
+          case AppScreen.ITEM_SCREEN:
+              return <ItemScreen 
+                goHome={this.goHome.bind(this)}
+                todoItem={this.state.currentItem}
+                todoList={this.state.currentList}
+                createOrEditItem={this.createOrEditItem}
+                cancel={this.cancel}/>
+          default:
+            return <div>ERROR</div>;
     }
   }
 }
