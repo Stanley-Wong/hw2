@@ -10,6 +10,7 @@ export class transactionOwnerChange{
     doTransaction() {
         this.currentList.owner = this.newOwner;
         this.application.setTransactionList(this.currentList);
+        this.application.refresh();
     }
 
     undoTransaction() {

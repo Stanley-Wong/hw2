@@ -10,6 +10,7 @@ export class transactionNameChange{
     doTransaction() {
         this.currentList.name = this.newName;
         this.application.setTransactionList(this.currentList);
+        this.application.refresh();
     }
 
     undoTransaction() {

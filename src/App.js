@@ -9,6 +9,8 @@ import { transactionsMoveUp } from './Transactions/transactionMoveUp.js';
 import { transactionsMoveDown } from './Transactions/transactionMoveDown.js';
 import { transactionsEditItem } from './Transactions/transactionEditItem.js';
 import { transactionNameChange } from './Transactions/transactionNameChange.js';
+import { transactionOwnerChange } from './Transactions/transactionOwnerChange.js';
+import { transactionNewItem } from './Transactions/transactionNewItem.js';
 
 const AppScreen = {
   HOME_SCREEN: "HOME_SCREEN",
@@ -68,6 +70,7 @@ class App extends Component {
   goHome = () => {
     this.setState({currentScreen: AppScreen.HOME_SCREEN});
     this.setState({currentList: null});
+    this.tps.clearAllTransactions();
   }
 
   newItem = () => {
@@ -91,9 +94,10 @@ class App extends Component {
 
   createNewItem = (newItem) => {
     let tempNewList = this.state.currentList;
-    let tempNewItem = tempNewList.items;
-    tempNewItem.push(newItem);
-    this.setState({currentList:tempNewList});
+    let transaction = new transactionNewItem(tempNewList, this, newItem)
+    this.tps.addTransaction(transaction);
+
+    this.setState({currentList:this.transactionList});
     this.setState({currentScreen: AppScreen.LIST_SCREEN});
   }
 
@@ -157,25 +161,19 @@ class App extends Component {
 
 
   moveUp = (item) => {
-
     this.moveUpItem = this.state.currentList;
     let tempItem = this.state.currentList.items;
     let index = tempItem.indexOf(item);
     let transaction = new transactionsMoveUp(this.moveUpItem, index, this);
     this.tps.addTransaction(transaction);
-
-
   }
 
   moveDown = (item) => {
-
     this.moveDownItem = this.state.currentList;
     let tempItem = this.state.currentList.items;
     let index = tempItem.indexOf(item);
     let transaction = new transactionsMoveDown(this.moveDownItem, index, this);
     this.tps.addTransaction(transaction);
-
-
   }
 
   delete = (item) => {
@@ -184,8 +182,6 @@ class App extends Component {
     let index= this.state.currentList.items.indexOf(item);
     let transaction = new transactionsDelete(this.deleteItemList, index, this);
     this.tps.addTransaction(transaction);
-
-
   }
   
   print = () => {
@@ -205,25 +201,21 @@ class App extends Component {
     if(evt.ctrlKey && char === 'z'){
       console.log("Ctrl + Z pressed");
       this.tps.undoTransaction();
-
     }
     if(evt.ctrlKey && char === 'y'){
       console.log("Ctrl + Y pressed");
       this.tps.doTransaction();
-
     }
   }
 
   recordNameChange = (newName) =>{
     let transaction = new transactionNameChange(newName,this.state.currentList, this);
     this.tps.addTransaction(transaction);
-
   }
 
   recordOwnerChange = (newOwner) =>{
-    let transaction = new transactionNameChange(newOwner,this.state.currentList, this);
+    let transaction = new transactionOwnerChange(newOwner,this.state.currentList, this);
     this.tps.addTransaction(transaction);
-
   }
 
   refresh() {
