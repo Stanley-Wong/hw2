@@ -6,6 +6,9 @@ import ListScreen from './components/list_screen/ListScreen'
 import jsTPS from './jsTPS'
 import { transactionsDelete } from './Transactions/transactionDelete.js';
 import { transactionsMoveUp } from './Transactions/transactionMoveUp.js';
+import { transactionsMoveDown } from './Transactions/transactionMoveDown.js';
+import { transactionsEditItem } from './Transactions/transactionEditItem.js';
+import { transactionNameChange } from './Transactions/transactionNameChange.js';
 
 const AppScreen = {
   HOME_SCREEN: "HOME_SCREEN",
@@ -23,6 +26,12 @@ class App extends Component {
 
   setTransactionList(initTransactionList) {
     this.transactionList=initTransactionList;
+
+    let tempTodos = this.state.todoLists;
+    let position = tempTodos.indexOf(this.state.currentList);
+    tempTodos[position] = this.transactionList;
+    this.setState({currentList:this.transactionList});
+    this.setState({todoLists:tempTodos});
   }
 
   state = {
@@ -91,8 +100,12 @@ class App extends Component {
   createEditItem = (editItem) => {
     let tempEditList = this.state.currentList;
     let tempEditItem = tempEditList.items;
-    tempEditItem[tempEditItem.indexOf(this.state.currentItem)] = editItem;
-    this.setState({currentList:tempEditList});
+    let index = tempEditItem.indexOf(this.state.currentItem);
+
+    let transaction = new transactionsEditItem(tempEditList,index,this,editItem)
+    this.tps.addTransaction(transaction);
+
+    this.setState({currentList:this.transactionList});
     this.setState({currentScreen: AppScreen.LIST_SCREEN});
   }
 
@@ -144,30 +157,35 @@ class App extends Component {
 
 
   moveUp = (item) => {
+
     this.moveUpItem = this.state.currentList;
-    let transaction = new transactionsMoveUp(this.moveUpItem, item, this);
+    let tempItem = this.state.currentList.items;
+    let index = tempItem.indexOf(item);
+    let transaction = new transactionsMoveUp(this.moveUpItem, index, this);
     this.tps.addTransaction(transaction);
 
-    this.setState({currentList:this.transactionList});
+
   }
 
   moveDown = (item) => {
-    let tempList = this.state.currentList;
-    let tempItem = tempList.items;
+
+    this.moveDownItem = this.state.currentList;
+    let tempItem = this.state.currentList.items;
     let index = tempItem.indexOf(item);
-    let temp = tempItem[index+1];
-    tempItem[index+1]=tempItem[index];
-    tempItem[index]=temp;
-    tempList.items = tempItem;
-    this.setState({currentList:tempList});
+    let transaction = new transactionsMoveDown(this.moveDownItem, index, this);
+    this.tps.addTransaction(transaction);
+
+
   }
 
   delete = (item) => {
+
     this.deleteItemList = this.state.currentList;
-    let transaction = new transactionsDelete(this.deleteItemList, item, this);
+    let index= this.state.currentList.items.indexOf(item);
+    let transaction = new transactionsDelete(this.deleteItemList, index, this);
     this.tps.addTransaction(transaction);
 
-    this.setState({currentList:this.transactionList});
+
   }
   
   print = () => {
@@ -182,20 +200,35 @@ class App extends Component {
   }
 
   handleKeyDown = (evt) =>{
+
     let char = String.fromCharCode(evt.which).toLowerCase();
     if(evt.ctrlKey && char === 'z'){
       console.log("Ctrl + Z pressed");
       this.tps.undoTransaction();
-      this.setState({currentList:this.transactionList});
+
     }
     if(evt.ctrlKey && char === 'y'){
       console.log("Ctrl + Y pressed");
       this.tps.doTransaction();
-      this.setState({currentList:this.transactionList});
+
     }
-    if(evt.ctrlKey && char === 'a'){
-      console.log(this.tps.peekUndo);
-    }
+  }
+
+  recordNameChange = (newName) =>{
+    let transaction = new transactionNameChange(newName,this.state.currentList, this);
+    this.tps.addTransaction(transaction);
+
+  }
+
+  recordOwnerChange = (newOwner) =>{
+    let transaction = new transactionNameChange(newOwner,this.state.currentList, this);
+    this.tps.addTransaction(transaction);
+
+  }
+
+  refresh() {
+    this.setState({currentScreen:AppScreen.HOME_SCREEN})
+    this.setState({currentScreen:AppScreen.LIST_SCREEN})
   }
 
   render() {
@@ -219,7 +252,9 @@ class App extends Component {
               sortStatus={this.sortByStatus}
               newItem={this.newItem}
               editItem={this.editItem}
-              confirmDelete={this.deleteList}/>
+              confirmDelete={this.deleteList}
+              transName={this.recordNameChange}
+              transOwner={this.recordOwnerChange}/>
           case AppScreen.ITEM_SCREEN:
               return <ItemScreen 
                 goHome={this.goHome.bind(this)}

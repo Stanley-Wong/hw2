@@ -1,5 +1,5 @@
 
-export class transactionsMoveUp{
+export class transactionsMoveDown{
     constructor(changingList, index, app) {
         this.list = changingList;
         this.application = app;
@@ -10,8 +10,8 @@ export class transactionsMoveUp{
         let newList = JSON.parse(JSON.stringify(this.list));
 
         let tempItem = newList.items;
-        let temp = tempItem[this.index-1];
-        tempItem[this.index-1]=tempItem[this.index];
+        let temp = tempItem[this.index+1];
+        tempItem[this.index+1]=tempItem[this.index];
         tempItem[this.index]=temp;
         newList.items = tempItem;
 
@@ -22,3 +22,4 @@ export class transactionsMoveUp{
         this.application.setTransactionList(this.list);
     }
 }
+

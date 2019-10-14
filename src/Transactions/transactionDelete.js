@@ -1,16 +1,15 @@
 
 export class transactionsDelete{
-    constructor(changingList, item, app) {
+    constructor(changingList, index, app) {
         this.list = changingList;
         this.application = app;
-        this.item = item;
+        this.index = index;
     }
 
     doTransaction(){
         let newList = JSON.parse(JSON.stringify(this.list));
         let tempItem = newList.items;
-        let index = tempItem.indexOf(this.item);
-        tempItem.splice(index,1);
+        tempItem.splice(this.index,1);
         this.application.setTransactionList(newList);
     }
 

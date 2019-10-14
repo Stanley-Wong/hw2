@@ -7,41 +7,41 @@ import ListDeletePopUp from './ListDeletePopUp';
 
 export class ListScreen extends Component {
     state = {
-        listName: this.getListName(),
-        listOwner: this.getListOwner(),
+        listName: this.props.todoList.name,
+        listOwner: this.props.todoList.owner,
         showDelete: false
     }
     getListName() {
         if (this.props.todoList) {
-            let name = this.props.todoList.name;
             return this.props.todoList.name;
         }
-        else
-            return "";
     }
     getListOwner() {
         if (this.props.todoList) {
-            let owner = this.props.todoList.owner;
             return this.props.todoList.owner;
         }
     }
 
     changeListName = (evt) =>{
-        var newName = evt.target.value;
+
+        let newName = evt.target.value;
         if(evt.target.value === ''){
             newName='UNKNOWN';
         }
         this.setState({listName:newName});
-        this.props.todoList.name = newName;
+
+        this.props.transName.call(this,newName);
     }
 
     changeListOwner = (evt) =>{
-        var newOwner = evt.target.value;
+
+        let newOwner = evt.target.value;
         if(evt.target.value === ''){
             newOwner='UNKNOWN';
         }
         this.setState({listOwner:newOwner});
-        this.props.todoList.owner = newOwner;
+
+        this.props.transOwner.call(this,newOwner);
     }
 
     toggleDelete = () => {

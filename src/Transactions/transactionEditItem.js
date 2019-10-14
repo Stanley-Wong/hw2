@@ -1,19 +1,16 @@
 
-export class transactionsMoveUp{
-    constructor(changingList, index, app) {
+export class transactionsEditItem{
+    constructor(changingList, index, app, editItem) {
         this.list = changingList;
         this.application = app;
         this.index = index;
+        this.edit = editItem;
     }
 
     doTransaction(){
         let newList = JSON.parse(JSON.stringify(this.list));
-
         let tempItem = newList.items;
-        let temp = tempItem[this.index-1];
-        tempItem[this.index-1]=tempItem[this.index];
-        tempItem[this.index]=temp;
-        newList.items = tempItem;
+        tempItem[this.index] = this.edit;
 
         this.application.setTransactionList(newList);
     }
