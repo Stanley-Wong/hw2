@@ -19,7 +19,7 @@ export class ListItemCard extends Component {
     }   
 
     upButton = () => {
-        if(this.props.index==0){
+        if(this.props.index===0){
             return (
                 <div style={disable} className="list_item_button_up" onClick={(e)=>{e.stopPropagation()}}>
                     ⇧
@@ -45,7 +45,7 @@ export class ListItemCard extends Component {
     }
 
     downButton = () => {
-        if(this.props.index==this.props.last){
+        if(this.props.index===this.props.last){
             return (
                 <div style={disable} className="list_item_button_down" onClick={(e)=>{e.stopPropagation()}}>
                     ⇩

@@ -2,7 +2,7 @@
 export class jsTPS{
 
     constructor() {
-        this.transactions = new Array();
+        this.transactions = [];
         this.performingDo = false;
         this.performingUndo = false;
         this.mostRecentTransaction = -1;
@@ -65,7 +65,7 @@ export class jsTPS{
     }
 
     clearAllTransactions() {
-        this.transactions = new Array();
+        this.transactions = [];
         this.mostRecentTransaction = -1;
     }
 
