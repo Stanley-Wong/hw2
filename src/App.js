@@ -198,13 +198,16 @@ class App extends Component {
   handleKeyDown = (evt) =>{
 
     let char = String.fromCharCode(evt.which).toLowerCase();
-    if(evt.ctrlKey && char === 'z'){
-      console.log("Ctrl + Z pressed");
-      this.tps.undoTransaction();
-    }
-    if(evt.ctrlKey && char === 'y'){
-      console.log("Ctrl + Y pressed");
-      this.tps.doTransaction();
+    if(this.state.currentScreen===AppScreen.LIST_SCREEN)
+    {
+      if(evt.ctrlKey && char === 'z'){
+        console.log("Ctrl + Z pressed");
+        this.tps.undoTransaction();
+      }
+      if(evt.ctrlKey && char === 'y'){
+        console.log("Ctrl + Y pressed");
+        this.tps.doTransaction();
+      }
     }
   }
 
@@ -224,14 +227,14 @@ class App extends Component {
   }
 
   render() {
-        window.addEventListener('keydown', this.handleKeyDown);
         switch(this.state.currentScreen) {
           case AppScreen.HOME_SCREEN:
             return <HomeScreen 
             loadList={this.loadList.bind(this)} 
             todoLists={this.state.todoLists} 
             createNewList={this.createNewList}/>;
-          case AppScreen.LIST_SCREEN:            
+          case AppScreen.LIST_SCREEN:       
+            window.addEventListener('keydown', this.handleKeyDown);     
             return <ListScreen
               changeListName={this.changeListName}
               goHome={this.goHome.bind(this)}
