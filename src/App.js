@@ -11,6 +11,9 @@ import { transactionsEditItem } from './Transactions/transactionEditItem.js';
 import { transactionNameChange } from './Transactions/transactionNameChange.js';
 import { transactionOwnerChange } from './Transactions/transactionOwnerChange.js';
 import { transactionNewItem } from './Transactions/transactionNewItem.js';
+import { transactionSortTask } from './Transactions/transactionSortTask.js';
+import { transactionSortDueDate } from './Transactions/transactionSortDueDate.js';
+import { transactionSortStatus } from './Transactions/transactionSortStatus.js';
 
 const AppScreen = {
   HOME_SCREEN: "HOME_SCREEN",
@@ -24,6 +27,9 @@ class App extends Component {
     super();
     this.tps = new jsTPS();
     this.transactionList = null;
+    this.sortedTask = false;
+    this.sortedDueDate = false;
+    this.sortedStatus = false;
   }
 
   setTransactionList(initTransactionList) {
@@ -132,31 +138,21 @@ class App extends Component {
 
   sortByDescription = () => {
     let tempList = this.state.currentList;
-    let tempItem = tempList.items;
-    tempItem.sort(function(a,b){return a.description.localeCompare(b.description)});
-    this.setState({currentList:tempList});
+    let transaction = new transactionSortTask(tempList, this);
+    this.tps.addTransaction(transaction);
   }
 
   sortByDueDate = () => {
     let tempList = this.state.currentList;
-    let tempItem = tempList.items;
-    tempItem.sort(function(a,b){return a.due_date.localeCompare(b.due_date)});
-    this.setState({currentList:tempList});
+    let transaction = new transactionSortDueDate(tempList, this);
+    this.tps.addTransaction(transaction);
+
   }
   
   sortByStatus = () => {
     let tempList = this.state.currentList;
-    let tempItem = tempList.items;
-    tempItem.sort(function(a,b){
-      if(a.completed===true&&b.completed===false)
-        return -1;   
-      else if(a.completed===false&&b.completed===true)
-        return 1;
-      else
-        return 0;
-      }
-    );
-    this.setState({currentList:tempList});
+    let transaction = new transactionSortStatus(tempList, this);
+    this.tps.addTransaction(transaction);
   }
 
 
